@@ -69,19 +69,19 @@ RSpec.describe Jekyll::GitHubMetadata::RepositoryFinder do
     after(:each) { ENV["JEKYLL_ENV"] = "test" }
 
     it "handles periods in repo names" do
-      allow(subject).to receive(:git_remote_url).and_return <<-EOS
-  origin  https://github.com/afeld/hackerhours.org.git (fetch)
-  origin  https://github.com/afeld/hackerhours.org.git (push)
-  EOS
+      allow(subject).to receive(:git_remote_url).and_return <<~OUTPUT
+        origin  https://github.com/afeld/hackerhours.org.git (fetch)
+        origin  https://github.com/afeld/hackerhours.org.git (push)
+      OUTPUT
       expect(subject.send(:nwo_from_git_origin_remote)).to include("afeld/hackerhours.org")
     end
 
     it "handles private github instance addresses" do
       allow(Jekyll::GitHubMetadata::Pages).to receive(:github_hostname).and_return "github.myorg.com"
-      allow(subject).to receive(:git_remote_url).and_return <<-EOS
-  origin  https://github.myorg.com/myorg/myrepo.git (fetch)
-  origin  https://github.myorg.com/myorg/myrepo.git (push)
-  EOS
+      allow(subject).to receive(:git_remote_url).and_return <<~OUTPUT
+        origin  https://github.myorg.com/myorg/myrepo.git (fetch)
+        origin  https://github.myorg.com/myorg/myrepo.git (push)
+      OUTPUT
       expect(subject.send(:nwo_from_git_origin_remote)).to include("myorg/myrepo")
     end
 
@@ -90,7 +90,7 @@ RSpec.describe Jekyll::GitHubMetadata::RepositoryFinder do
         @old_path = ENV["PATH"]
         ENV["PATH"] = ""
       end
-      after(:each)  { ENV["PATH"] = @old_path }
+      after(:each) { ENV["PATH"] = @old_path }
 
       it "fails with a nice error message" do
         allow(subject).to receive(:git_remote_url).and_call_original
